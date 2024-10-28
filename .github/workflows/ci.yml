@@ -13,4 +13,4 @@ jobs:
     needs: test
     uses: ./.github/workflows/build-and-push.yml
     with:
-      docker_username: ${{ secrets.DOCKER_USERNAME }}
+      username: ${{ secrets.DOCKER_USERNAME }}
