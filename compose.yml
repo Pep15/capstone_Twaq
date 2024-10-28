@@ -1,45 +1,31 @@
 services:
-  db:
-    image: mysql:latest
-    container_name: mysql
-    restart: always
-    environment:
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_DATABASE: "mydatabase"
-      MYSQL_ROOT_PASSWORD: '12345'
-    volumes:
-      - mysql_data:/var/lib/mysql
-
-    ports:
-      - '3306:3306'
-  redis:
-    image: redis:latest
-    container_name: redis
-    restart: always
-    ports:
-      - "6379:6379"
-  web:
-    build: .
-    depends_on:
-      - db
-      - redis
-    links:
-      - db
-    container_name: capstone-flask-app
-    ports:
-      - "3000:5000"
-    environment:
-      MYSQL_HOST: 'db'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_DATABASE: 'mydatabase'
-      REDIS_HOST: 'redis'
-    volumes:
-      - app:/app
-
-volumes:
-  mysql_data:
   app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=mysql            # MySQL host, named by its service in this file
+      - DB_USER=user             # MySQL username
+      - DB_PASSWORD=password     # MySQL password
+      - DB_NAME=mydatabase       # MySQL database name
+      - REDIS_HOST=redis         # Redis host, named by its service in this file
+    ports:
+      - "80:5000"              # Maps port 5000 on the host to port 5000 on the container
+    depends_on:
+      - redis
+      - mysql
 
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"              # Maps Redis port 6379
 
+  mysql:
+    image: "mysql:latest"
+    environment:
+      MYSQL_ROOT_PASSWORD: password    # MySQL root password
+      MYSQL_DATABASE: mydatabase       # Database to create
+      MYSQL_USER: user                 # User for MySQL
+      MYSQL_PASSWORD: password         # Password for the MySQL user
+    ports:
+      - "3306:3306"                    # Maps MySQL port 3306
