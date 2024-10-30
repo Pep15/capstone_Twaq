@@ -14,7 +14,7 @@ env:
 
 jobs:
   deploy1:
-    runs-on: self-hosted1
+    runs-on: self-hosted
     steps:
       - name: Deploying to server 1
         run: |
