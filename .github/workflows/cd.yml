@@ -1,32 +1,41 @@
-name: Build and Push
+name: deploying
 
 on:
-  workflow_call:
-    inputs:
-      docker_username:
-        required: true
-        type: string
+    push:
+        branches:
+            - main
+env:
+  SSH_KEY: ${{secrets.SSH_KEY}}
+  SSH_USER: ${{secrets.SSH_USER}}
+  SSH_HOST1: ${{secrets.SSH_HOST1}}
+  SSH_HOST2: ${{secrets.SSH_HOST2}}
 
 jobs:
-  build-and-push-image:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-           username: ${{ secrets.DOCKER_USERNAME }}
-           password: ${{ secrets.DOCKER_PASSOWRD }}  # Ensure the secret name is correct
-
-      - name: Build Docker image
-        run: |
-           docker build -t ${{ secrets.DOCKER_USERNAME }}/flask-app:latest .
-
-      - name: Push Docker image
-        run: |
-           docker push ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
+    check:
+        runs-on: Checkout Repositry
+        steps:
+          - name: Checkout Repositry
+            uses: actions/checkout@v4
+    deploy1:
+        runs-on: self-hosted1
+        steps:
+          - name: Deploying to server 1
+            run: |
+              echo "$SSH_KEY" > mKey.pem
+              chmod 600 mKey.pem
+              ssh -i myKey2.pem $SSH_USER@$SSH_HOST1 
+              cd capstone_Twaq
+              git pullhttps://github.com/Pep15/capstone_Twaq.git
+              docker compose up -d --build
+    deploy2:
+        runs-on: self-hosted2
+        needs: deploy1
+        steps:
+          - name: Deploying to server 2
+            run: |
+              echo "$SSH_KEY" > mKey.pem
+              chmod 600 mKey.pem
+              ssh -i mKey.pem $SSH_USER@$SSH_HOST2 
+              cd capstone_Twaq
+              git pullhttps://github.com/Pep15/capstone_Twaq.git
+              docker compose up -d --build
