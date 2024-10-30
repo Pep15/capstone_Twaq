@@ -8,9 +8,9 @@ on:
 
 env:
   SSH_KEY: ${{ secrets.SSH_KEY }}
-  SSH_USER: ${{ secrets.SSH_USER }}
-  SSH_HOST1: ${{ secrets.SSH_HOST1 }}
-  SSH_HOST2: ${{ secrets.SSH_HOST2 }}
+  SSH_USER: ${{ secrets.SSH_USERNAME }}
+  SSH_HOST1: ${{ secrets.HOST1 }}
+  SSH_HOST2: ${{ secrets.HOST2 }}
 
 jobs:
   deploy1:
@@ -20,11 +20,14 @@ jobs:
         run: |
           echo "${{ secrets.SSH_KEY }}" > mKey.pem
           chmod 600 mKey.pem
-          ssh -i mKey.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST1 }} << 'EOF'
+          ssh -i mKey.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST1 }} << 'EOF'
+          set -e
           cd capstone_Twaq
           git pull https://github.com/Pep15/capstone_Twaq.git
           docker compose up -d --build
+          rm -f mKey.pem
           EOF
+
   deploy2:
     runs-on: self-hosted
     needs: deploy1
@@ -33,8 +36,10 @@ jobs:
         run: |
           echo "${{ secrets.SSH_KEY }}" > mKey.pem
           chmod 600 mKey.pem
-          ssh -i mKey.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST2 }} << 'EOF'
+          ssh -i mKey.pem ${{ secrets.SSH_USER }}@${{ secrets.HOST2}} << 'EOF'
+          set -e
           cd capstone_Twaq
           git pull https://github.com/Pep15/capstone_Twaq.git
           docker compose up -d --build
+          rm -f mKey.pem
           EOF
