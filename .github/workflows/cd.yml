@@ -18,9 +18,9 @@ jobs:
     steps:
       - name: Deploying to server 1
         run: |
-          echo "${{ secrets.SSH_KEY }}" > mKey.pem
-          chmod 600 mKey.pem
-          ssh -i mKey.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST1 }} << 'EOF'
+          echo "${{ secrets.SSH_KEY }}" > mKey1.pem
+          chmod 600 mKey1.pem
+          ssh -i mKey1.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST1 }} << 'EOF'
           set -e
           cd capstone_Twaq
           git pull https://github.com/Pep15/capstone_Twaq.git
@@ -30,13 +30,12 @@ jobs:
 
   deploy2:
     runs-on: self-hosted
-    needs: deploy1
     steps:
       - name: Deploying to server 2
         run: |
-          echo "${{ secrets.SSH_KEY }}" > mKey.pem
-          chmod 600 mKey.pem
-          ssh -i mKey.pem ${{ secrets.SSH_USER }}@${{ secrets.HOST2}} << 'EOF'
+          echo "${{ secrets.SSH_KEY }}" > mKey2.pem
+          chmod 600 mKey2.pem
+          ssh -i mKey2.pem ${{ secrets.SSH_USER }}@${{ secrets.HOST2}} << 'EOF'
           set -e
           cd capstone_Twaq
           git pull https://github.com/Pep15/capstone_Twaq.git
