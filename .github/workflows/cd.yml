@@ -16,7 +16,7 @@ jobs:
         steps:
           - name: Checkout Repositry
             uses: actions/checkout@v4
-    deploy1:
+    deploy:
         runs-on: self-hosted1
         steps:
           - name: Deploying to server 1
@@ -27,10 +27,6 @@ jobs:
               cd capstone_Twaq
               git pullhttps://github.com/Pep15/capstone_Twaq.git
               docker compose up -d --build
-    deploy2:
-        runs-on: self-hosted2
-        needs: deploy1
-        steps:
           - name: Deploying to server 2
             run: |
               echo "$SSH_KEY" > mKey.pem
