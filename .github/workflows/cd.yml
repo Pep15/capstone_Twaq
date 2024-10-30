@@ -1,9 +1,11 @@
-name: deploying
-
+name: CD
 on:
-    push:
+    workflow_run: 
+        workflows: ["CI"]
         branches:
             - main
+        types:
+            - completed    
 env:
   SSH_KEY: ${{secrets.SSH_KEY}}
   SSH_USER: ${{secrets.SSH_USER}}
@@ -11,12 +13,7 @@ env:
   SSH_HOST2: ${{secrets.SSH_HOST2}}
 
 jobs:
-    check:
-        runs-on: Checkout Repositry
-        steps:
-          - name: Checkout Repositry
-            uses: actions/checkout@v4
-    deploy:
+    deploy1:
         runs-on: self-hosted1
         steps:
           - name: Deploying to server 1
@@ -27,6 +24,9 @@ jobs:
               cd capstone_Twaq
               git pullhttps://github.com/Pep15/capstone_Twaq.git
               docker compose up -d --build
+    deploy2:
+        runs-on: self-hosted2
+        steps:
           - name: Deploying to server 2
             run: |
               echo "$SSH_KEY" > mKey.pem
