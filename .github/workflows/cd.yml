@@ -1,37 +1,40 @@
 name: CD
+
 on:
-    workflow_run: 
-        workflows: ["CI"]
-        branches:
-            - main
-        types:
-            - completed    
+  workflow_run: 
+    workflows: ["CI"]
+    types:
+      - completed    
+
 env:
-  SSH_KEY: ${{secrets.SSH_KEY}}
-  SSH_USER: ${{secrets.SSH_USER}}
-  SSH_HOST1: ${{secrets.SSH_HOST1}}
-  SSH_HOST2: ${{secrets.SSH_HOST2}}
+  SSH_KEY: ${{ secrets.SSH_KEY }}
+  SSH_USER: ${{ secrets.SSH_USER }}
+  SSH_HOST1: ${{ secrets.SSH_HOST1 }}
+  SSH_HOST2: ${{ secrets.SSH_HOST2 }}
 
 jobs:
-    deploy1:
-        runs-on: self-hosted1
-        steps:
-          - name: Deploying to server 1
-            run: |
-              echo "$SSH_KEY" > mKey.pem
-              chmod 600 mKey.pem
-              ssh -i myKey2.pem ${{secrets.SSH_USER}}@${{secrets.SSH_HOST1}} 
-              cd capstone_Twaq
-              git pull https://github.com/Pep15/capstone_Twaq.git
-              docker compose up -d --build
-    deploy2:
-        runs-on: self-hosted2
-        steps:
-          - name: Deploying to server 2
-            run: |
-              echo "$SSH_KEY" > mKey.pem
-              chmod 600 mKey.pem
-              ssh -i myKey2.pem ${{secrets.SSH_USER}}@${{secrets.SSH_HOST2}} 
-              cd capstone_Twaq
-              git pull https://github.com/Pep15/capstone_Twaq.git
-              docker compose up -d --build
+  deploy1:
+    runs-on: self-hosted1
+    steps:
+      - name: Deploying to server 1
+        run: |
+          echo "${{ secrets.SSH_KEY }}" > mKey.pem
+          chmod 600 mKey.pem
+          ssh -i mKey.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST1 }} << 'EOF'
+          cd capstone_Twaq
+          git pull https://github.com/Pep15/capstone_Twaq.git
+          docker compose up -d --build
+          EOF
+  deploy2:
+    runs-on: self-hosted2
+    needs: deploy1
+    steps:
+      - name: Deploying to server 2
+        run: |
+          echo "${{ secrets.SSH_KEY }}" > mKey.pem
+          chmod 600 mKey.pem
+          ssh -i mKey.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST2 }} << 'EOF'
+          cd capstone_Twaq
+          git pull https://github.com/Pep15/capstone_Twaq.git
+          docker compose up -d --build
+          EOF
