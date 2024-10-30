@@ -26,7 +26,7 @@ jobs:
           docker compose up -d --build
           EOF
   deploy2:
-    runs-on: self-hosted2
+    runs-on: self-hosted
     needs: deploy1
     steps:
       - name: Deploying to server 2
