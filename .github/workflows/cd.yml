@@ -20,9 +20,9 @@ jobs:
             run: |
               echo "$SSH_KEY" > mKey.pem
               chmod 600 mKey.pem
-              ssh -i myKey2.pem $SSH_USER@$SSH_HOST1 
+              ssh -i myKey2.pem ${{secrets.SSH_USER}}@${{secrets.SSH_HOST1}} 
               cd capstone_Twaq
-              git pullhttps://github.com/Pep15/capstone_Twaq.git
+              git pull https://github.com/Pep15/capstone_Twaq.git
               docker compose up -d --build
     deploy2:
         runs-on: self-hosted2
@@ -31,7 +31,7 @@ jobs:
             run: |
               echo "$SSH_KEY" > mKey.pem
               chmod 600 mKey.pem
-              ssh -i mKey.pem $SSH_USER@$SSH_HOST2 
+              ssh -i myKey2.pem ${{secrets.SSH_USER}}@${{secrets.SSH_HOST2}} 
               cd capstone_Twaq
-              git pullhttps://github.com/Pep15/capstone_Twaq.git
+              git pull https://github.com/Pep15/capstone_Twaq.git
               docker compose up -d --build
