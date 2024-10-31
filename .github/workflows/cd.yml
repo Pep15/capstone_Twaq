@@ -24,7 +24,6 @@ jobs:
           ssh -i mKey1.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.HOST1 }} << 'EOF'
           set -e
           cd /capstone_Twaq
-           git config pull.ff
           git pull https://github.com/Pep15/capstone_Twaq.git
           docker compose up -d --build
           rm -f mKey.pem
@@ -39,7 +38,7 @@ jobs:
           ssh -i mKey2.pem ${{ secrets.SSH_USERNAME }}@${{ secrets.HOST2}} << 'EOF'
           set -e
           cd /capstone_Twaq
-           git config pull.ff
+          
           git pull https://github.com/Pep15/capstone_Twaq.git
           docker compose up -d --build
           rm -f mKey.pem
