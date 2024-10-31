@@ -36,7 +36,7 @@ def init_db():
 def index():
     return render_template('index.html')
 
-@app.route('/new_user', methods=['POST'])
+@app.route('/add_user', methods=['POST'])
 def add_user():
     username = request.form['username']
     
