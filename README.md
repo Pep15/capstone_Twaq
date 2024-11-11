@@ -18,4 +18,4 @@ The project utilizes **GitHub Actions** to automate essential DevOps tasks:
 - **Automated Testing:** Ensuring that changes to the Docker setup or other configurations are validated before deployment.
 - **Continuous Deployment:** Using GitHub Actions to trigger the automated deployment process, ensuring the latest version of the application is containerized and deployed smoothly.
 ```markdown
-![Tuwaiq Academy Logo](images/images.png)
+![Tuwaiq Academy Logo](./images/images.png)
